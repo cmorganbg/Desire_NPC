@@ -1,0 +1,577 @@
+BACKUP ~desire/backup~
+AUTHOR ~cmorgan: http://gibberlings3.net/forums/index.php?showforum=159~
+VERSION ~Alpha_1~
+
+/* README ~desire/docs/readme-desire-%LANGUAGE%.html~ */
+/* LANGUAGE	~English~ ~english~ ~c-desire\tra\english\c-desire.tra~ ~c-desire\tra\english\setup.tra~ */
+
+BEGIN ~Install Desire~
+REQUIRE_PREDICATE GAME_IS ~bgee~ ~BG:EE is not detected. Currently this content only installs on BG:EE.~
+
+PRINT ~BG:EE detected. Using BG:EE resources.~
+OUTER_SPRINT ~startingarea~	~ar2600~
+OUTER_SPRINT ~movingarea~ ~ar2700~
+OUTER_SPRINT ~startingareatp2~ ~ar2600~	
+
+// ENABLE FOR BG2:EE INSTALL 
+// ACTION_IF GAME_IS ~bg2ee~ THEN BEGIN
+// /* defining and extending variables to import into BG2:EE from the BG:EE save */
+// COPY_EXISTING ~varimprt.2da~ ~override~
+ // COUNT_2DA_ROWS 2 ~rows~ // the the count is from 0 
+   // SET value1 = (%rows%)
+   // SET value2 = (%rows% + 1)
+   // SET value3 = (%rows% + 2) 
+   // SET value4 = (%rows% + 3)
+   // SET value5 = (%rows% + 4)
+   // APPEND ~varimprt.2da~ ~%value1% c-desireinterest~ UNLESS ~c-desireinterest~
+   // APPEND ~varimprt.2da~ ~%value2% c-desirerom~ UNLESS ~c-desirerom~
+   // APPEND ~varimprt.2da~ ~%value3% c-desirerombg~ UNLESS ~c-desirerombg~
+   // APPEND ~varimprt.2da~ ~%value4% c-desirefriendbg~ UNLESS ~c-desirefriendbg~
+   // APPEND ~varimprt.2da~ ~%value5% c-desirealignment~ UNLESS ~c-desirealignment~
+// END
+
+COPY ~desire/media/blank.log~ ~override/c-desiredebugger01.log~
+APPEND ~c-desiredebugger01.log~ "//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\"
+APPEND ~c-desiredebugger01.log~ "//\\//\\//\\ Desire Component 0 - Begin Log//\\//\\//\\"
+APPEND ~c-desiredebugger01.log~ "//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\"
+APPEND ~c-desiredebugger01.log~ ~WeiDU says that this game is BG:EE .~
+APPEND ~c-desiredebugger01.log~ ~WeiDU thinks that this is Component %COMPONENT_NUMBER%~
+
+/* Setting up timered interactions with player choice before compiling .d and .baf */
+OUTER_FOR( desire_timer_choice = 0 ; ~%desire_timer_choice%~ STRING_COMPARE_REGEXP ~^[12]$~ ; )BEGIN
+	PRINT ~Set Talk and Flirt Timers
+	[1] Install Default Timers
+	[2] Customize Timers
+Please type 1 or 2 and press enter.~
+	ACTION_READLN desire_timer_choice
+END // of O_F
+ACTION_IF ("desire_timer_choice" = 1) THEN BEGIN
+	/*  patching files with player choice: set talk timers */
+		OUTER_SET DESIRE_FTT = 3600
+		OUTER_SET DESIRE_LTT = 3600
+		OUTER_SET DESIRE_FLIRT = 3600
+		PRINT ~Speed: minimum 1 hour real time between dialogues (Default, recommended)~
+		OUTER_SET choseninitialrom = 2400
+		PRINT ~Initial Lovetalk offset by 40 minutes~
+		OUTER_SET choseninitialflirt = 1200
+		PRINT ~Initial NPC-Initiated Flirt offset by 20 minutes~
+		PRINT ~So if you are in a romance with her 
+and never stop the romance, 
+after the lovetalks start,
+the timer sequence will start 
+hourly FriendTalk, 
+NPC-initiated Flirt 20 minutes later, 
+RomanceTalk 20 minutes after that, 
+then 20 minutes later the next FriendTalk fires. 
+Please note that the timers are not exact, and 
+variations within the game may mean 
+bursts of activity followed by long waits...
+especially when you run out of timered content!
+This behavior may vary by how much Desire approves of your actions...~
+		APPEND ~c-desiredebugger01.log~ ~Default timers [1] chosen.~
+		OUTER_SPRINT desire_timerchoice ~So if you are in a romance with her 
+and never stop the romance, 
+after the lovetalks start,
+the timer sequence will start 
+hourly FriendTalk, 
+NPC-initiated Flirt 20 minutes later, 
+RomanceTalk 20 minutes after that, 
+then 20 minutes later the next FriendTalk fires. 
+Please note that the timers are not exact, and 
+variations within the game may mean 
+bursts of activity followed by long waits...
+especially when you run out of timered content!
+This behavior may vary by how much Desire approves of your actions...~
+		APPEND ~c-desiredebugger01.log~ ~%desire_timerchoice%~
+END
+ACTION_IF ("desire_timer_choice" = 2) THEN BEGIN
+	PRINT ~Select Desire's Talk timers:~
+	PRINT ~Please choose one of the following:
+	[1] approximately 1 hour real time minimum between friendship dialogues (recommended, default)
+	[2] approximately 15 minutes real time minimum between friendship dialogues
+	[3] approximately 30 minutes real time minimum between friendship dialogues
+	[4] approximately 45 minutes real time minimum between friendship dialogues
+	[5] approximately 1 hour 30 minutes real time minimum friendship between dialogues~		
+	APPEND ~c-desiredebugger01.log~ ~Custom timers [2] chosen.~
+	OUTER_SPRINT ~friendshiptimer~ ~placeholder_value~
+	OUTER_WHILE (!(IS_AN_INT ~friendshiptimer~) OR (~friendshiptimer~ > 0x5) OR (~friendshiptimer~ < 0x1)) BEGIN
+		PRINT ~Please type 1, 2, 3, 4, or 5 and press enter.~
+		ACTION_READLN ~friendshiptimer~
+	END
+	ACTION_IF ("friendshiptimer" = 1) THEN BEGIN
+		OUTER_SET DESIRE_FTT = 3600
+		OUTER_SET DESIRE_LTT = 3600
+		OUTER_SET DESIRE_FLIRT = 3600
+		PRINT ~Speed: minimum 1 hour real time between dialogues (Default, recommended)~
+		OUTER_SET choseninitialrom = 2400
+		PRINT ~Initial Lovetalk offset by 40 minutes~
+		OUTER_SET choseninitialflirt = 1200
+		PRINT ~Initial NPC-Initiated Flirt offset by 20 minutes~
+		PRINT ~So if you are in a romance with her 
+and never stop the romance, 
+after the lovetalks start,
+the timer sequence will start 
+hourly FriendTalk, 
+NPC Flirt 20 minutes later, 
+and RomanceTalk 20 minutes after that, 
+then 20 minutes later the next FriendTalk fires. 
+Please note that the timers are not exact, and 
+variations within the game may mean 
+bursts of activity followed by long waits...
+especially when you run out of timered content!
+This behavior may vary by how much Desire approves of your actions...~
+		APPEND ~c-desiredebugger01.log~ ~Standard FTT, LTT, FLIRT timers [1] chosen.~
+		OUTER_SPRINT desire_timerchoice ~So if you are in a romance with her 
+and never stop the romance, 
+after the lovetalks start,
+the timer sequence will start 
+hourly FriendTalk, 
+NPC Flirt 20 minutes later, 
+and RomanceTalk 20 minutes after that, 
+then 20 minutes later the next FriendTalk fires. 
+Please note that the timers are not exact, and 
+variations within the game may mean 
+bursts of activity followed by long waits...
+especially when you run out of timered content!
+This behavior may vary by how much Desire approves of your actions...~
+		APPEND ~c-desiredebugger01.log~ ~%desire_timerchoice%~
+	END
+	ACTION_IF ("friendshiptimer" = 2) THEN BEGIN
+		OUTER_SET DESIRE_FTT = 900
+		OUTER_SET DESIRE_LTT = 900
+		OUTER_SET DESIRE_FLIRT = 900
+		PRINT ~Speed: minimum 15 minutes real time between dialogues~
+		OUTER_SET choseninitialrom = 600
+		PRINT ~Initial Lovetalk offset by 10 minutes~
+		OUTER_SET choseninitialflirt = 300
+		PRINT ~Initial NPC-Initiated Flirt offset by 5 minutes~
+		PRINT ~So if you are in a romance with her 
+and never stop the romance, 
+after the lovetalks start,
+the timer sequence will start 
+15 minute FriendTalk, 
+NPC-initiated Flirt 5 minutes later, 
+and RomanceTalk 5 minutes after that, 
+then 5 minutes later the next FriendTalk fires.
+Please note that the timers are not exact, and 
+variations within the game may mean 
+bursts of activity followed by long waits...
+especially when you run out of timered content!
+This behavior may vary by how much Desire approves of your actions...~
+		APPEND ~c-desiredebugger01.log~ ~15 minute FTT, LTT, FLIRT timers [2] chosen.~
+		OUTER_SPRINT desire_timerchoice ~So if you are in a romance with her 
+and never stop the romance, 
+after the lovetalks start,
+the timer sequence will start 
+15 minute FriendTalk, 
+NPC-initiated Flirt 5 minutes later, 
+and RomanceTalk 5 minutes after that, 
+then 5 minutes later the next FriendTalk fires.
+Please note that the timers are not exact, and 
+variations within the game may mean 
+bursts of activity followed by long waits...
+especially when you run out of timered content!
+This behavior may vary by how much Desire approves of your actions...~
+		APPEND ~c-desiredebugger01.log~ ~%desire_timerchoice%~
+	END
+	ACTION_IF ("friendshiptimer" = 3) THEN BEGIN
+		OUTER_SET DESIRE_FTT = 1800
+		OUTER_SET DESIRE_LTT = 1800
+		OUTER_SET DESIRE_FLIRT = 1800
+		PRINT ~Speed: minimum 30 minutes real time between dialogues~
+		OUTER_SET choseninitialrom = 1200
+		PRINT ~Initial Lovetalk offset by 20 minutes~
+		OUTER_SET choseninitialflirt = 600
+		PRINT ~Initial NPC-Initiated Flirt offset by 10 minutes~
+		PRINT @30058
+		APPEND ~c-desiredebugger01.log~ ~30 minute FTT, LTT, FLIRT timers [3] chosen.~
+		OUTER_SPRINT desire_timerchoice ~So if you are in a romance with her 
+and never stop the romance, 
+after the lovetalks start (after friendship talk 3),
+the timer sequence will start 
+30 minute FriendTalk, 
+NPC-initiated Flirt 10 minutes later, 
+and RomanceTalk 10 minutes after that, 
+then 10 minutes later the next FriendTalk fires.
+Please note that the timers are not exact, and 
+variations within the game may mean 
+bursts of activity followed by long waits...
+especially when you run out of timered content!
+This behavior may vary by how much Desire approves of your actions...~
+		APPEND ~c-desiredebugger01.log~ ~%desire_timerchoice%~
+	END
+	ACTION_IF ("friendshiptimer" = 4) THEN BEGIN
+		OUTER_SET DESIRE_FTT = 2700
+		OUTER_SET DESIRE_LTT = 2700
+		OUTER_SET DESIRE_FLIRT = 2700
+		PRINT ~Speed: minimum 45 minutes real time between dialogues~
+		OUTER_SET choseninitialrom = 1800
+		PRINT ~Initial Lovetalk offset by 30 minutes~
+		OUTER_SET choseninitialflirt = 900
+		PRINT ~Initial NPC-Initiated Flirt offset by 15 minutes~
+		PRINT ~So if you are in a romance with her 
+after the lovetalks start (after friendship talk 3),
+the timer sequence will start 
+45 minute FriendTalk, 
+NPC-initiated Flirt 15 minutes later, 
+and RomanceTalk 15 minutes after that, 
+then 15 minutes later the next FriendTalk fires.
+Please note that the timers are not exact, and 
+variations within the game may mean 
+bursts of activity followed by long waits...
+especially when you run out of timered content!
+This behavior may vary by how much Desire approves of your actions...~
+		APPEND ~c-desiredebugger01.log~ ~45 minute FTT, LTT, FLIRT timers [4] chosen.~
+		OUTER_SPRINT desire_timerchoice ~So if you are in a romance with her 
+after the lovetalks start (after friendship talk 3),
+the timer sequence will start 
+45 minute FriendTalk, 
+NPC-initiated Flirt 15 minutes later, 
+and RomanceTalk 15 minutes after that, 
+then 15 minutes later the next FriendTalk fires.
+Please note that the timers are not exact, and 
+variations within the game may mean 
+bursts of activity followed by long waits...
+especially when you run out of timered content!
+This behavior may vary by how much Desire approves of your actions...~
+		APPEND ~c-desiredebugger01.log~ ~%desire_timerchoice%~
+	END
+	ACTION_IF ("friendshiptimer" = 5) THEN BEGIN
+		OUTER_SET DESIRE_FTT = 5400
+		OUTER_SET DESIRE_LTT = 5400
+		OUTER_SET DESIRE_FLIRT = 5400
+		PRINT ~Speed: minimum 1 hour 30 minutes real time between dialogues~
+		OUTER_SET choseninitialrom = 3600
+		PRINT ~Initial Lovetalk offset by 60 minutes~
+		OUTER_SET choseninitialflirt = 1800
+		PRINT ~Initial NPC-Initiated Flirt offset by 30 minutes~
+		PRINT ~So if you are in a romance with her 
+		and never stop the romance, 
+after the lovetalks start (after friendship talk 3),
+the timer sequence will start 
+90 minute FriendTalk, 
+NPC-initiated Flirt 30 minutes later, 
+and RomanceTalk 30 minutes after that, 
+then 30 minutes later the next FriendTalk fires.
+Please note that the timers are not exact, and 
+variations within the game may mean 
+bursts of activity followed by long waits...
+especially when you run out of timered content!
+This behavior may vary by how much Desire approves of your actions...~
+		APPEND ~c-desiredebugger01.log~ ~1 hour 30 minutes FTT, LTT, FLIRT timers [5] chosen.~
+		OUTER_SPRINT desire_timerchoice ~So if you are in a romance with her 
+		and never stop the romance, 
+after the lovetalks start (after friendship talk 3),
+the timer sequence will start 
+90 minute FriendTalk, 
+NPC-initiated Flirt 30 minutes later, 
+and RomanceTalk 30 minutes after that, 
+then 30 minutes later the next FriendTalk fires.
+Please note that the timers are not exact, and 
+variations within the game may mean 
+bursts of activity followed by long waits...
+especially when you run out of timered content!
+This behavior may vary by how much Desire approves of your actions...~
+		APPEND ~c-desiredebugger01.log~ ~%desire_timerchoice%~
+	END
+END
+
+/* .2da patching */
+APPEND ~interdia.2da~ ~C-DESIRE C-DESIRB~ UNLESS ~C-DESIRB~
+	COPY_EXISTING ~interdia.2da~ ~override~	
+		PRETTY_PRINT_2DA
+	
+APPEND ~pdialog.2da~ ~C-DESIRE C-DESIRP C-DESIRJ C-DESIRD~ UNLESS ~C-DESIRE~
+	COPY_EXISTING ~pdialog.2da~ ~override~
+		PRETTY_PRINT_2DA
+
+/* state.ids patching */
+
+APPEND ~STATE.IDS~ ~0x80101FEF CD_STATE_NOTVALID~
+       UNLESS ~CD_STATE_NOTVALID~
+	   
+/* .2da patching */
+
+COPY ~desire/cre/c-desire.cre~ ~override~
+	SPRINT ~added_helm~ ~nothing~
+	SPRINT ~added_armor~ ~nothing~
+	SPRINT ~added_shield~ ~nothing~
+	SPRINT ~added_weapon1~ ~nothing~
+	SPRINT ~added_weapon2~ ~nothing~
+	SPRINT ~added_ammo~ ~nothing~
+	SPRINT ~added_bow~ ~nothing~
+	SPRINT ~added_item~ ~nothing~
+	SAY NAME1 ~Desire Anira Laelithar~
+	SAY NAME2 ~Desire~
+	SAY INITIAL_MEETING ~[c-de021]~ [c-de021]
+	SAY DIALOG_DEFAULT ~[c-de021]~ [c-de021]
+	SAY MORALE ~[c-de001]~ [c-de001]
+	SAY HAPPY ~[c-de036]~ [c-de036]
+	SAY UNHAPPY_ANNOYED ~[c-de004]~ [c-de004]
+	SAY UNHAPPY_SERIOUS ~[c-de032]~ [c-de032]
+	SAY UNHAPPY_BREAKING_POINT ~[c-de011]~ [c-de011]
+	SAY LEADER ~[c-de012]~ [c-de012]
+	SAY TIRED ~[c-de013]~ [c-de013]
+	SAY BORED ~[c-de014]~ [c-de014]
+	SAY BATTLE_CRY1 ~[c-de008]~ [c-de008]
+	SAY BATTLE_CRY2 ~[c-de009]~ [c-de009]
+	SAY BATTLE_CRY3 ~[c-de011]~ [c-de011]
+	SAY BATTLE_CRY4 ~[c-de013]~ [c-de013]
+	SAY BATTLE_CRY5 ~[c-de014]~ [c-de014]
+	SAY DAMAGE ~[c-de022]~ [c-de022]
+	SAY DYING ~[c-de023]~ [c-de023]
+	SAY HURT ~[c-de015]~ [c-de015]
+	SAY AREA_FOREST ~[c-de024]~ [c-de024]
+	SAY AREA_CITY ~[c-de025]~ [c-de025]
+	SAY AREA_DUNGEON ~[c-de026]~ [c-de026]
+	SAY AREA_DAY ~[c-de027]~ [c-de027]
+	SAY AREA_NIGHT ~[c-de028]~ [c-de028]
+	SAY SELECT_COMMON1 ~[c-de010]~ [c-de010]
+	SAY SELECT_COMMON2 ~[c-de016]~ [c-de016]
+	SAY SELECT_COMMON3 ~[c-de017]~ [c-de017]
+	SAY SELECT_COMMON4 ~[c-de018]~ [c-de018]
+	SAY SELECT_COMMON5 ~[c-de019]~ [c-de019]
+	SAY SELECT_COMMON6 ~[c-de020]~ [c-de020]
+	SAY SELECT_ACTION1 ~[c-de029]~ [c-de029]
+	SAY SELECT_ACTION2 ~[c-de030]~ [c-de030]
+	SAY SELECT_ACTION3 ~[c-de031]~ [c-de031]
+	SAY SELECT_ACTION4 ~[c-de032]~ [c-de032]
+	SAY SELECT_ACTION5 ~[c-de033]~ [c-de033]
+	SAY SELECT_ACTION6 ~[c-de034]~ [c-de034]
+	SAY SELECT_ACTION7 ~[c-de035]~ [c-de035]
+	SAY SELECT_RARE1 ~[c-de036]~ [c-de036]
+	SAY SELECT_RARE2 ~[c-de036]~ [c-de036]
+	SAY CRITICAL_HIT ~[c-de036]~ [c-de038]
+	SAY CRITICAL_MISS ~[c-de001]~ [c-de001]
+	SAY TARGET_IMMUNE ~[c-de002]~ [c-de002]
+	SAY INVENTORY_FULL ~[c-de003]~ [c-de003]
+	SAY PICKED_POCKET ~[c-de004]~ [c-de004]
+	SAY HIDDEN_IN_SHADOWS ~[c-de005]~ [c-de005]
+	SAY SPELL_DISRUPTED ~[c-de006]~ [c-de006]
+	SAY SET_A_TRAP ~[c-de007]~ [c-de007]
+	SAY BIO ~[c-desirebio] Desire Anira Laelithar is a companion from your youth. While most children seemed to enjoy Candlekeep, Desire did not. Her difficulties with authority were legendary. Eventually, the orphan was sent for training in a more strict environment. She has just returned from an apprenticeship with the Coast Watch, learning to be a fighter, just north of Baldur's Gate. When asked how it went, she responds "It was useful. Not fun. Actually, it was horrible. I don't want to talk about it. Go away."~
+	WRITE_ASCII 0x2cc ~C-DESIRE~ #8 /* dialogue */
+	WRITE_ASCII 0x280 ~C-DESIRE~ #32 /* DV */
+	WRITE_ASCII 0x248 ~C-DESIRE~ #8 /* override script */
+	WRITE_ASCII 0x0268 ~WTARSGT~ #8 /* Creature script - Default */
+	WRITE_ASCII 0x34	~c-desirs~ #8	/* assign small portrait */
+	WRITE_ASCII 0x3c	~c-desirm~ #8	/* assign medium portrait */
+    WRITE_BYTE 0x0237 0x02 //  sex : female
+	WRITE_BYTE 0x275 2 //  gender : female
+    WRITE_BYTE 0x270 128 // Allegiance = Neutral
+	WRITE_LONG 0x18 800 // current XP
+    WRITE_SHORT 0x24 10 // current hit points
+    WRITE_SHORT 0x26 10 // maximum hit points
+    WRITE_SHORT 0x28 24848 // Sets avatar to FIGHTER_FEMALE_HUMAN
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x2C 30 // metal color
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x2D 47 // minor color
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x2E 46 // major color
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x2F 12 // skin color
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x30 23 // leather color
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x31 30 // armor color
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x32 4 // hair color
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x45 0 // Hide in Shadows skill
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x52 20 // THAC0
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x54 12 // save vs. death
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x55 14 // save vs. wands
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x56 13 // save vs. polymorph
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x57 15 // save vs. breath
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x58 15 // save vs. spells
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x64 0 // Detect Illusions skill
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x65 0 // Set Traps skill
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x66 1 // Lore
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x67 0 // Open Locks skill
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x68 0 // Move Silently skill
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x69 0 // Find Traps skill
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x6a 0 // Pick Pockets skill
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x6f 0 // BG1 Proficiency slot (small sword)
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x75 0 // BG1 Proficiency slot (missile)
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x234 1 // level (first class)
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x235 0 // level (second class)
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x236 0 // level (third class)
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x238 16 // Strength
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x23a 16 // Inteligence
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x23b 16 // Wisdom
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x23c 14 // Dexterity
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x23d 15 // Constitution
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x23e 17 // Charisma
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x23f 18 // morale
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x240 5 // morale break
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x242 30 // morale recovery
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x272 1 // race
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x273 6 // class
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x27b 11 // alignment
+	/* Patch in items loadout - will be more extensible later */
+	SPRINT ~added_armor~ ~leat04~ // studded leather armor
+	SPRINT ~added_weapon1~ ~sw1h04~ // long sword	
+	SPRINT ~added_weapon2~ ~dagg01~ // dagger
+	SPRINT ~added_bow~ ~xbow04~ // light crossbow
+	// SPRINT ~added_ammo~ ~bolt01~ // bolts 
+	SPRINT ~added_item~ ~potn08~ // potion of healing
+	/* add the desired equipment to the .cre */	
+	PATCH_IF (~%added_helm%~ STR_CMP ~nothing~) THEN BEGIN
+		ADD_CRE_ITEM ~%added_helm%~ #0 #0 #0 IDENTIFIED HELMET
+	END
+	PATCH_IF (~%added_armor%~ STR_CMP ~nothing~) THEN BEGIN
+		ADD_CRE_ITEM ~%added_armor%~ #0 #0 #0 IDENTIFIED ARMOR
+	END
+	PATCH_IF (~%added_shield%~ STR_CMP ~nothing~) THEN BEGIN
+		ADD_CRE_ITEM ~%added_shield%~	#0	#0 #0 IDENTIFIED INV
+	END
+	PATCH_IF (~%added_weapon1%~ STR_CMP ~nothing~) THEN BEGIN
+		ADD_CRE_ITEM ~%added_weapon1%~ #0	#0 #0 IDENTIFIED WEAPON
+	END
+	PATCH_IF (~%added_weapon2%~ STR_CMP ~nothing~) THEN BEGIN
+		ADD_CRE_ITEM ~%added_weapon2%~ #0	#0 #0 IDENTIFIED WEAPON
+	END
+	PATCH_IF (~%added_bow%~ STR_CMP ~nothing~) THEN BEGIN
+		ADD_CRE_ITEM ~%added_bow%~	#0	#0 #0 IDENTIFIED INV
+	END
+	PATCH_IF (~%added_ammo%~ STR_CMP ~nothing~) THEN BEGIN
+		ADD_CRE_ITEM ~%added_ammo%~ #20 #0 #0 IDENTIFIED QUIVER
+	END
+	PATCH_IF (~%added_item%~ STR_CMP ~nothing~) THEN BEGIN
+		ADD_CRE_ITEM ~%added_item%~ #5 #0 #0 IDENTIFIED QITEM
+	END
+		
+PRINT ~Installing dialog...~
+
+/* SoA dialog file */
+COMPILE EVALUATE_BUFFER ~desire/dialog/c-desire_bgee.d~ 
+
+/* .cre population */
+
+/* resources */
+PRINT ~Copying default portrait~
+COPY ~desire/media/portraits/c-desirl.bmp~ ~override~ 
+COPY ~desire/media/portraits/c-desirm.bmp~ ~override~ 
+COPY ~desire/media/portraits/c-desirs.bmp~ ~override~ 
+
+/* install scripts */
+
+PRINT ~Installing scripts...~
+/* Regular Scripts */
+COMPILE EVALUATE_BUFFER ~desire/baf/c-desire.baf~ /* override script */
+COMPILE EVALUATE_BUFFER ~desire/baf/c-desird.baf~ /* dreamscript */
+EXTEND_TOP ~%startingareatp2%.bcs~ ~desire/baf/c-desirespawn.baf~ /* prologue script spawning her */
+   EVALUATE_BUFFER
+   
+PRINT ~Installing sounds... eventually.But not yet.~
+
+/* close out and move custom info .log back to subdirectory for easy reading */
+APPEND ~c-desiredebugger01.log~ "//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//"
+APPEND ~c-desiredebugger01.log~ "//\\//\\ Desire Component 0 - End Log//\\//\\//\\//\\/"
+APPEND ~c-desiredebugger01.log~ "//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//"
+COPY ~override/c-desiredebugger01.log~ ~desire/desire_0_debugger.log~
+
+/* end of able_to_be_compiled file contents */
+
+/* sounds */
+
+// BEGIN ~Install "earnest but fumbling" version, temporarily ripped from SHS Soundsets Mod.~
+	// FORCED_SUBCOMPONENT ~Install Audio Files~
+	// REQUIRE_COMPONENT ~setup-light.tp2~ ~0~ ~Eleanor must be installed for this to work.~
+	// COPY ~light/media/g3blank.mus~ 	~music~
+	// COPY_EXISTING ~songlist.2da~ 		~override~
+		// SET_2DA_ENTRY 0 2 3 ~g3blank.mus~
+	// BUT_ONLY
+	// /* set up what sounds need to be installed for this component to be covered */
+	// ACTION_CLEAR_ARRAY	~sounds~
+	// ACTION_DEFINE_ARRAY ~sounds~ BEGIN
+		// ~c-lt001~
+		// ~c-lt002~
+		// ~c-lt003~
+		// ~c-lt004~
+		// ~c-lt005~
+		// ~c-lt006~
+		// ~c-lt007~
+		// ~c-lt008~
+		// ~c-lt009~
+		// ~c-lt010~
+		// ~c-lt011~
+		// ~c-lt012~
+		// ~c-lt013~
+		// ~c-lt014~
+		// ~c-lt015~
+		// ~c-lt016~
+		// ~c-lt017~
+		// ~c-lt018~
+		// ~c-lt019~
+		// ~c-lt020~
+		// ~c-lt021~
+		// ~c-lt022~
+		// ~c-lt023~
+		// ~c-lt024~
+		// ~c-lt025~
+		// ~c-lt026~
+		// ~c-lt027~
+		// ~c-lt028~
+		// ~c-lt029~
+		// ~c-lt030~
+		// ~c-lt031~
+		// ~c-lt032~
+		// ~c-lt033~
+		// ~c-lt034~
+		// ~c-lt035~
+		// ~c-lt036~
+	// END
+	// /* look for the resulting .wav files and copy them into the game */
+	// ACTION_PHP_EACH ~sounds~ AS ~index~ => ~sound~ BEGIN
+		// ACTION_IF (NOT FILE_EXISTS_IN_GAME ~%sound%.wav~) BEGIN
+			// COPY ~desire/media/soundset/%sound%.wav~ ~override~
+		// END
+	// END
+
+// BEGIN ~Install "female paladin" version, temporarily ripped from SHS Soundsets Mod.~
+	// FORCED_SUBCOMPONENT ~Install Audio Files~
+	// REQUIRE_COMPONENT ~setup-light.tp2~ ~0~ ~Eleanor must be installed for this to work.~
+	// COPY ~light/media/g3blank.mus~ 	~music~
+	// COPY_EXISTING ~songlist.2da~ 		~override~
+		// SET_2DA_ENTRY 0 2 3 ~g3blank.mus~
+	// BUT_ONLY
+	// /* set up what sounds need to be installed for this component to be covered */
+	// ACTION_CLEAR_ARRAY	~sounds~
+	// ACTION_DEFINE_ARRAY ~sounds~ BEGIN
+		// ~c-lt001~
+		// ~c-lt002~
+		// ~c-lt003~
+		// ~c-lt004~
+		// ~c-lt005~
+		// ~c-lt006~
+		// ~c-lt007~
+		// ~c-lt008~
+		// ~c-lt009~
+		// ~c-lt010~
+		// ~c-lt011~
+		// ~c-lt012~
+		// ~c-lt013~
+		// ~c-lt014~
+		// ~c-lt015~
+		// ~c-lt016~
+		// ~c-lt017~
+		// ~c-lt018~
+		// ~c-lt019~
+		// ~c-lt020~
+		// ~c-lt021~
+		// ~c-lt022~
+		// ~c-lt023~
+		// ~c-lt024~
+		// ~c-lt025~
+		// ~c-lt026~
+		// ~c-lt027~
+		// ~c-lt028~
+		// ~c-lt029~
+		// ~c-lt030~
+		// ~c-lt031~
+		// ~c-lt032~
+		// ~c-lt033~
+		// ~c-lt034~
+		// ~c-lt035~
+		// ~c-lt036~
+	// END
+	// /* look for the resulting .wav files and copy them into the game */
+	// ACTION_PHP_EACH ~sounds~ AS ~index~ => ~sound~ BEGIN
+		// ACTION_IF (NOT FILE_EXISTS_IN_GAME ~%sound%.wav~) BEGIN
+			// COPY ~light/media/f_paladin/%sound%.wav~ ~override~
+		// END
+	// END

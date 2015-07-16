@@ -1,0 +1,221 @@
+/* top of c-desire.baf */
+
+IF
+	Global("c-desireadded","GLOBAL",0)
+	!InParty(Myself)
+	!StateCheck(Myself,CD_STATE_NOTVALID)
+	AreaCheck("%startingarea%") // we are  in the prologue
+THEN
+	RESPONSE #100
+		SetGlobal("c-desireadded","GLOBAL",1)
+		MakeGlobal()
+END
+	
+/* Move from Prologue to Chapter 1 */
+		
+IF
+	Global("c-desiremoves","GLOBAL",1)
+	!InParty(Myself)
+	!StateCheck(Myself,CD_STATE_NOTVALID)
+	AreaCheck("%startingarea%") // we are  in the prologue
+THEN
+	RESPONSE #100
+		SetGlobal("c-desiremoves","GLOBAL",2)
+		MoveToOffset([10.10])
+		MoveBetweenAreas("%movingarea%",[1762.3694],0)
+END
+
+/* Friend Talks Sequence */
+/* Friend Talks Setup */
+IF
+	Global("c-desirefriendsetup","GLOBAL",0)
+	!AreaCheck("%startingarea%") // not in prologue
+	InParty(Myself)
+	!StateCheck(Myself,CD_STATE_NOTVALID)
+THEN
+	RESPONSE #100
+		SetGlobalTimer("c-desireisdrunk","GLOBAL",10)
+		SetGlobal("c-desirefriendsetup","GLOBAL",1)
+		RealSetGlobalTimer("c-desirefriendtimer","GLOBAL",%DESIRE_FTT%)
+END
+
+/* Desire's FriendTalks Aim : c-desirefriendbg : %DESIRE_FTT% */
+IF
+	GlobalLT("c-desirefriendbg","GLOBAL",29)
+	RealGlobalTimerExpired("c-desirefriendtimer","GLOBAL")
+	OR(15)
+		Global("c-desirefriendbg","GLOBAL",0)	// set up BG_FT_1
+		Global("c-desirefriendbg","GLOBAL",2)	// set up BG_FT_2
+		Global("c-desirefriendbg","GLOBAL",4)	// set up BG_FT_3
+		Global("c-desirefriendbg","GLOBAL",6)	// set up BG_FT_4
+		Global("c-desirefriendbg","GLOBAL",8)	// set up BG_FT_5
+		Global("c-desirefriendbg","GLOBAL",10) 	// set up BG_FT_6
+		Global("c-desirefriendbg","GLOBAL",12) 	// set up BG_FT_7
+		Global("c-desirefriendbg","GLOBAL",14) 	// set up BG_FT_8
+		Global("c-desirefriendbg","GLOBAL",16) 	// set up BG_FT_9
+		Global("c-desirefriendbg","GLOBAL",18) 	// set up BG_FT_10
+		Global("c-desirefriendbg","GLOBAL",20) 	// set up BG_FT_11
+		Global("c-desirefriendbg","GLOBAL",22) 	// set up BG_FT_12
+		Global("c-desirefriendbg","GLOBAL",24) 	// set up BG_FT_13
+		Global("c-desirefriendbg","GLOBAL",26) 	// set up BG_FT_14
+		Global("c-desirefriendbg","GLOBAL",28) 	// set up BG_FT_15
+THEN
+	RESPONSE #100
+		IncrementGlobal("c-desirefriendbg","GLOBAL",1)	// move up from even to odd
+END
+
+/* Desire's FriendTalks Fire : c-desirefriendbg : %DESIRE_FTT% */
+/* This block takes the odd variables set by the last block, and tries to fire them off.	*/
+IF
+	GlobalLT("c-desirefriendbg","GLOBAL",30)
+	RealGlobalTimerExpired("c-desirefriendtimer","GLOBAL")
+	InParty(Myself)
+	!StateCheck(Myself,CD_STATE_NOTVALID)
+	!StateCheck(Player1,CD_STATE_NOTVALID)
+	!ActuallyInCombat()
+	!See([ENEMY])
+	OR(15)
+		Global("c-desirefriendbg","GLOBAL",1)	// fire BG_FT_1
+		Global("c-desirefriendbg","GLOBAL",3)	// fire BG_FT_2
+		Global("c-desirefriendbg","GLOBAL",5)	// fire BG_FT_3
+		Global("c-desirefriendbg","GLOBAL",7)	// fire BG_FT_4
+		Global("c-desirefriendbg","GLOBAL",9)	// fire BG_FT_5
+		Global("c-desirefriendbg","GLOBAL",11)	// fire BG_FT_6
+		Global("c-desirefriendbg","GLOBAL",13)	// fire BG_FT_7
+		Global("c-desirefriendbg","GLOBAL",15)	// fire BG_FT_8
+		Global("c-desirefriendbg","GLOBAL",17)	// fire BG_FT_9
+		Global("c-desirefriendbg","GLOBAL",19)	// fire BG_FT_10
+		Global("c-desirefriendbg","GLOBAL",21)	// fire BG_FT_11
+		Global("c-desirefriendbg","GLOBAL",23)	// fire BG_FT_12
+		Global("c-desirefriendbg","GLOBAL",25)	// fire BG_FT_13
+		Global("c-desirefriendbg","GLOBAL",27)	// fire BG_FT_14
+		Global("c-desirefriendbg","GLOBAL",29)	// fire BG_FT_15
+THEN
+	RESPONSE #100
+		PlaySong(0)
+		PlaySound("c-des001") // friendship
+		StartDialogueNoSet(Player1)
+END
+
+IF
+	Global("c-desirematch","GLOBAL",0)
+	!AreaCheck("%startingarea%") // delay check until after the prologue
+	Gender(Player1,MALE)				
+	InParty(Myself)						
+	!StateCheck(Myself,CD_STATE_NOTVALID)	
+	!StateCheck(Player1,CD_STATE_NOTVALID) 
+	!HasItemEquiped("belt05",Player1)	
+THEN
+	RESPONSE #100							
+		SetGlobal("c-desirematch","GLOBAL",1)	
+		SetGlobal("c-desirerom","GLOBAL",1)	
+END
+
+/* Romance Talks Sequence */
+/* Romance Talks Setup */
+IF 
+	GlobalGT("c-desireinterest","GLOBAL",10) // interested incremented by game action and dialogue
+	Global("c-desirematch","GLOBAL",1)
+	Global("c-desireromsetup","GLOBAL",0)	
+	Gender(Player1,MALE)
+	!HasItemEquiped("belt05",Player1)
+	InParty(Myself)
+	!StateCheck(Myself,CD_STATE_NOTVALID)
+THEN
+	RESPONSE #100
+		SetGlobal("c-desireromsetup","GLOBAL",1)
+		RealSetGlobalTimer("c-desireromtimer","GLOBAL",%choseninitialrom%)
+		RealSetGlobalTimer("c-desireflirttimer","GLOBAL",%choseninitialflirt%)
+END
+
+
+/* Desire's RomanceTalks Aim : c-desirerombg : %DESIRE_LTT% */
+IF
+	GlobalLT("c-desirerombg","GLOBAL",29)
+	GlobalGT("c-desireinterest","GLOBAL",10) // automatically suspends the romance talks if interest goes too low
+	RealGlobalTimerExpired("c-desireromtimer","GLOBAL")
+	!HasItemEquiped("belt05",Player1) // Not using Girdle of sex change
+	OR(15)
+		Global("c-desirerombg","GLOBAL",0)	// set up BG_LT_1
+		Global("c-desirerombg","GLOBAL",2)	// set up BG_LT_2
+		Global("c-desirerombg","GLOBAL",4)	// set up BG_LT_3
+		Global("c-desirerombg","GLOBAL",6)	// set up BG_LT_4
+		Global("c-desirerombg","GLOBAL",8) 	// set up BG_LT_5
+		Global("c-desirerombg","GLOBAL",10)	// set up BG_LT_6
+		Global("c-desirerombg","GLOBAL",12) // set up BG_LT_7
+		Global("c-desirerombg","GLOBAL",14)	// set up BG_LT_8
+		Global("c-desirerombg","GLOBAL",16)	// set up BG_LT_9
+		Global("c-desirerombg","GLOBAL",18)	// set up BG_LT_10
+		Global("c-desirerombg","GLOBAL",20)	// set up BG_LT_11
+		Global("c-desirerombg","GLOBAL",22)	// set up BG_LT_12
+		Global("c-desirerombg","GLOBAL",24)	// set up BG_LT_13
+		Global("c-desirerombg","GLOBAL",26)	// set up BG_LT_14
+		Global("c-desirerombg","GLOBAL",28)	// set up BG_LT_15
+THEN
+	RESPONSE #100
+		IncrementGlobal("c-desirerombg","GLOBAL",1)	// move up from even to odd
+END
+
+/* Desire's RomanceTalks Fire : c-desirerombg : %DESIRE_LTT% */
+IF
+	GlobalLT("c-desirerombg","GLOBAL",30)
+	RealGlobalTimerExpired("c-desireromtimer","GLOBAL")
+	InParty(Myself)
+	!StateCheck(Myself,CD_STATE_NOTVALID)
+	!StateCheck(Player1,CD_STATE_NOTVALID)
+	!ActuallyInCombat()
+	!See([ENEMY])
+	OR(15)
+		Global("c-desirerombg","GLOBAL",1)	// fire BG_LT_1
+		Global("c-desirerombg","GLOBAL",3)	// fire BG_LT_2
+		Global("c-desirerombg","GLOBAL",5)	// fire BG_LT_3
+		Global("c-desirerombg","GLOBAL",7)	// fire BG_LT_4
+		Global("c-desirerombg","GLOBAL",9)	// fire BG_LT_5
+		Global("c-desirerombg","GLOBAL",11)	// fire BG_LT_6
+		Global("c-desirerombg","GLOBAL",13)	// fire BG_LT_7
+		Global("c-desirerombg","GLOBAL",15)	// fire BG_LT_8
+		Global("c-desirerombg","GLOBAL",17)	// fire BG_LT_9
+		Global("c-desirerombg","GLOBAL",19)	// fire BG_LT_10
+		Global("c-desirerombg","GLOBAL",21)	// fire BG_LT_11
+		Global("c-desirerombg","GLOBAL",23)	// fire BG_LT_12
+		Global("c-desirerombg","GLOBAL",25)	// fire BG_LT_13
+		Global("c-desirerombg","GLOBAL",27)	// fire BG_LT_14
+		Global("c-desirerombg","GLOBAL",29)	// fire BG_LT_15
+THEN
+	RESPONSE #100
+		PlaySong(0)
+		PlaySound("c-des002") // romancetalk sound
+		StartDialogueNoSet(Player1)
+END
+
+/* NPC-Initiated Flirts: setup */
+IF
+	Global("c-desirerom","GLOBAL",2)
+	Global("c-desirepcflirtstart","GLOBAL",0)
+	GlobalGT("c-desireinterest","GLOBAL",15)  // try this value - may be too high or too low
+	Global("c-desireflirttoggle","GLOBAL",0)
+	!HasItemEquiped("belt05",Player1)
+THEN RESPONSE #100
+	SetGlobal("c-desirepcflirtstart","GLOBAL",1)
+	RealSetGlobalTimer("c-desireflirttimer","GLOBAL",%choseninitialflirt%)
+END
+
+/* NPC-Initiated Flirts: fire */
+IF
+	InParty(Myself)
+	Global("c-desirepcflirtstart","GLOBAL",1)
+	Global("c-desireflirttoggle","GLOBAL",0)
+	RealGlobalTimerExpired("c-desireflirttimer","GLOBAL")
+	GlobalGT("c-desireinterest","GLOBAL",10)
+	See(Player1)
+	!StateCheck(Player1,CD_STATE_NOTVALID)
+	!StateCheck("c-aran",CD_STATE_NOTVALID)
+	!HasItemEquiped("belt05",Player1)
+	CombatCounter(0)
+THEN 
+	RESPONSE #100
+		SetGlobal("c-desirelightflirt","GLOBAL",1)
+		PlaySong(0)
+		PlaySound("c-des002") // romancetalk sound
+		StartDialogNoSet(Player1)
+END

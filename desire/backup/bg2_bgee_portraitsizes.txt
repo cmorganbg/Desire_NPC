@@ -1,0 +1,15 @@
+
+BG:EE/BG2:EE
+
+BLANKL.bmp - 210 x 330 pixels, 200 Resolution, 204K
+BLANKM.bmp - 169 x 266 pixels, 200 Resolution, 132K
+BLANKS.bmp - 54 x 84 pixels, 200 Resolution, 16K
+
+210x330
+
+For small portraits: 38x60
+For large portraits: 110x170
+For epilogue portraits: 210x330
+
+24-bit .BMP format works fine.
+

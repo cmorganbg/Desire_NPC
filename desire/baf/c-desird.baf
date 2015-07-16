@@ -1,0 +1,16 @@
+/*  Dream Script  : at rest*/
+IF
+	Global("c-desirenighttalk","GLOBAL",1)
+	InParty(Myself)
+	CombatCounter(0)
+	!StateCheck(Myself,CD_STATE_NOTVALID)
+	!StateCheck(Player1,CD_STATE_NOTVALID)
+	!AreaType(DUNGEON)
+THEN  
+	RESPONSE #100
+		SetGlobal("c-desirenighttalk","GLOBAL",2)
+		RealSetGlobalTimer("c-desiredreamtalk","GLOBAL",300)	
+		PlaySong(0)
+		PlaySound("c-des003")
+		StartDialogNoSet(Player1)
+END
