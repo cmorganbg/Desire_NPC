@@ -1,20 +1,14 @@
-/*
- * "Desire"
- * cmorgan
- * gibberlings3.net
-*/
-
 BACKUP ~desire/backup~
 AUTHOR ~cmorgan: http://gibberlings3.net/forums/index.php?showforum=159~
-VERSION ~Alpha_2~
+VERSION ~Alpha_1~
 
 /* README ~desire/docs/readme-desire-%LANGUAGE%.html~ */
 /* LANGUAGE	~English~ ~english~ ~c-desire\tra\english\c-desire.tra~ ~c-desire\tra\english\setup.tra~ */
 
 BEGIN ~Install Desire~
-// REQUIRE_PREDICATE GAME_IS ~bgee~ ~BG:EE is not detected. Currently this content only installs on BG:EE.~
+REQUIRE_PREDICATE GAME_IS ~bgee~ ~BG:EE is not detected. Currently this content only installs on BG:EE.~
 
-// PRINT ~BG:EE detected. Using BG:EE resources.~
+PRINT ~BG:EE detected. Using BG:EE resources.~
 OUTER_SPRINT ~startingarea~	~ar2600~
 OUTER_SPRINT ~movingarea~ ~ar2700~
 OUTER_SPRINT ~startingareatp2~ ~ar2600~	
@@ -360,8 +354,8 @@ COPY ~desire/cre/c-desire.cre~ ~override~
 	WRITE_ASCII 0x280 ~C-DESIRE~ #32 /* DV */
 	WRITE_ASCII 0x248 ~C-DESIRE~ #8 /* override script */
 	WRITE_ASCII 0x0268 ~WTARSGT~ #8 /* Creature script - Default */
-	WRITE_ASCII 0x34	~c-desirl~ #8	/* assign small portrait */
-	WRITE_ASCII 0x3c	~c-desirl~ #8	/* assign medium portrait */
+	WRITE_ASCII 0x34	~c-desirs~ #8	/* assign small portrait */
+	WRITE_ASCII 0x3c	~c-desirm~ #8	/* assign medium portrait */
     WRITE_BYTE 0x0237 0x02 //  sex : female
 	WRITE_BYTE 0x275 2 //  gender : female
     WRITE_BYTE 0x270 128 // Allegiance = Neutral
@@ -369,44 +363,44 @@ COPY ~desire/cre/c-desire.cre~ ~override~
     WRITE_SHORT 0x24 10 // current hit points
     WRITE_SHORT 0x26 10 // maximum hit points
     WRITE_SHORT 0x28 24848 // Sets avatar to FIGHTER_FEMALE_HUMAN
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x2C 30 // metal color
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x2D 47 // minor color
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x2E 46 // major color
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x2F 12 // skin color
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x30 23 // leather color
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x31 30 // armor color
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x32 4 // hair color
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x45 0 // Hide in Shadows skill
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x52 20 // THAC0
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x54 12 // save vs. death
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x55 14 // save vs. wands
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x56 13 // save vs. polymorph
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x57 15 // save vs. breath
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x58 15 // save vs. spells
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x64 0 // Detect Illusions skill
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x65 0 // Set Traps skill
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x66 1 // Lore
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x67 0 // Open Locks skill
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x68 0 // Move Silently skill
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x69 0 // Find Traps skill
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x6a 0 // Pick Pockets skill
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x6f 0 // BG1 Proficiency slot (small sword)
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x75 0 // BG1 Proficiency slot (missile)
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x234 1 // level (first class)
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x235 0 // level (second class)
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x236 0 // level (third class)
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x238 16 // Strength
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x23a 16 // Inteligence
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x23b 16 // Wisdom
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x23c 14 // Dexterity
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x23d 15 // Constitution
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x23e 17 // Charisma
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x23f 18 // morale
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x240 5 // morale break
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x242 30 // morale recovery
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x272 1 // race
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x273 6 // class
-    // already set on .cre - only enable to make changes in testing // WRITE_BYTE 0x27b 11 // alignment
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x2C 30 // metal color
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x2D 47 // minor color
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x2E 46 // major color
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x2F 12 // skin color
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x30 23 // leather color
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x31 30 // armor color
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x32 4 // hair color
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x45 0 // Hide in Shadows skill
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x52 20 // THAC0
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x54 12 // save vs. death
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x55 14 // save vs. wands
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x56 13 // save vs. polymorph
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x57 15 // save vs. breath
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x58 15 // save vs. spells
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x64 0 // Detect Illusions skill
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x65 0 // Set Traps skill
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x66 1 // Lore
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x67 0 // Open Locks skill
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x68 0 // Move Silently skill
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x69 0 // Find Traps skill
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x6a 0 // Pick Pockets skill
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x6f 0 // BG1 Proficiency slot (small sword)
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x75 0 // BG1 Proficiency slot (missile)
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x234 1 // level (first class)
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x235 0 // level (second class)
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x236 0 // level (third class)
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x238 16 // Strength
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x23a 16 // Inteligence
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x23b 16 // Wisdom
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x23c 14 // Dexterity
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x23d 15 // Constitution
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x23e 17 // Charisma
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x23f 18 // morale
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x240 5 // morale break
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x242 30 // morale recovery
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x272 1 // race
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x273 6 // class
+    // already sety on .cre - only enable to make changes in testing // WRITE_BYTE 0x27b 11 // alignment
 	/* Patch in items loadout - will be more extensible later */
 	SPRINT ~added_armor~ ~leat04~ // studded leather armor
 	SPRINT ~added_weapon1~ ~sw1h04~ // long sword	
@@ -449,12 +443,9 @@ COMPILE EVALUATE_BUFFER ~desire/dialog/c-desire_bgee.d~
 
 /* resources */
 PRINT ~Copying default portrait~
-// COPY ~desire/media/portraits/c-desirl.bmp~ ~override~ 
-// COPY ~desire/media/portraits/c-desirm.bmp~ ~override~ 
-// COPY ~desire/media/portraits/c-desirs.bmp~ ~override~ 
-
-COPY ~desire/media/portraits/c-dark_default.bmp~ ~override/c-desirl.bmp~ 
-  
+COPY ~desire/media/portraits/c-desirl.bmp~ ~override~ 
+COPY ~desire/media/portraits/c-desirm.bmp~ ~override~ 
+COPY ~desire/media/portraits/c-desirs.bmp~ ~override~ 
 
 /* install scripts */
 

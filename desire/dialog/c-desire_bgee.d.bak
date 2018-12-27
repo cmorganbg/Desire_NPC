@@ -31,7 +31,7 @@ END
 IF ~AreaCheck("%startingarea%") Global("c-desireentry","GLOBAL",0)~ THEN BEGIN DESIRE_0_PROLOGUE
   SAY ~[DESIRE] You look like you are in a hurry.~
   ++ ~[PC] Ani! When did you get back to Candlekeep!~ DO ~SetGlobal("c-desireentry","GLOBAL",1)~ + INTRO_1
-  ++ ~[PC] Desire Anira. You return to your humble roots.~ DO ~SetGlobal("c-desireentry","GLOBAL",1)~ + INTRO_2
+  ++ ~[PC] Desire Anira Laelithar. You return to your humble roots.~ DO ~SetGlobal("c-desireentry","GLOBAL",1)~ + INTRO_2
   ++ ~[PC] The last time I saw you, you were threatening to tear Imoen's eyes out because she took the last piece of cake.~ DO ~SetGlobal("c-desireentry","GLOBAL",1)~ + INTRO_3
   ++ ~[PC] I am in a hurry. Too many chores to do, too many people asking for me... but it is good to see you are back home.~ DO ~SetGlobal("c-desireentry","GLOBAL",1)~ + INTRO_4
   ++ ~[PC] I'm not. I am never in a hurry. I let my servants hurry for me.~ DO ~SetGlobal("c-desireentry","GLOBAL",1)~ + INTRO_5
@@ -39,8 +39,8 @@ END
 
 IF ~~ INTRO_1
   SAY ~[DESIRE] Don't call me that. We are not ten summers any more.~
-  ++ ~[PC] Still the same. I swear, if I said "don't steal Hulls sword", you would do it just to bug me.~ + INTRO_15
-  ++ ~[PC] Fine. Desire, I greet you in the manner expected of a lady and a swordswoman.~ + INTRO_35
+  ++ ~[PC] Still the same old girl. I swear, if I said "don't steal Hulls sword", you would do it just to bug me.~ + INTRO_15
+  ++ ~[PC] Fine. Desire Anira Laelithar, I greet you in the manner expected of a lady and a swordswoman.~ + INTRO_35
   ++ ~[PC] No, we are not ten summers any more, or even fourteen. And you most assuredly do not look anything like you did then.~ + INTRO_25
   ++ ~[PC] To me, you will always be the scruffy ruffian who held my face in the trough until Imoen hit you over the head with a broom.~ + INTRO_45
   ++ ~[PC] You look about the same. Talk the same way, too. Still a pain.~ + INTRO_55
@@ -49,7 +49,7 @@ END
 IF ~~ INTRO_2
   SAY ~[DESIRE] <CHARNAME> I greet you as befits your station in life and your poor choice in companionship.~
   ++ ~[PC] Ooohh! A witty, snarky response instead of a fight! You have changed! Sadly, nothing here has.~ + INTRO_15
-  ++ ~[PC] Nice voice, nice speech, nice body... this is not the Desi I knew.~ + INTRO_25
+  ++ ~[PC] Nice voice, nice speech, nice body... this is not the Ani I knew.~ + INTRO_25
   ++ ~[PC] Alas, my boon companion has been turned from dirty ruffian to sophisticated swordswoman, returning to make my life difficult.~ + INTRO_35
   ++ ~[PC] The last time I saw you, you were throwing various pieces of crockery at my head and saying you never wanted to see me ever again.~ + INTRO_45
   ++ ~[PC] No station, so "<PRO_GIRLBOY>", and no companions, so "lonely". Plus, I have had to do all your chores, so "tired".~ + INTRO_15
@@ -70,7 +70,7 @@ IF ~~ INTRO_4
   ++ ~[PC] This has been home to both of us for so long. But you have... changed. In appearance, I mean.~ + INTRO_25
   ++ ~[PC] And here you are, all ready to straighten it up and make it more interesting. Or get us all into more trouble.~ + INTRO_35
   ++ ~[PC] Five years away apprenticing, and all you have to say is that? I still have a scar on my left leg you gave me!~ + INTRO_45
-  ++ ~[PC] Well, I had better be going.~ + INTRO_6
+  ++ ~[PC] Well, it has been nice talking to you. I had better be going.~ + INTRO_6
 END
 
 IF ~~ INTRO_5
